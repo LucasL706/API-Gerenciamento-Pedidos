@@ -58,7 +58,7 @@ const deleteOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
         await deleteOrderService(orderId);
-        res.json({'Pedido deletado com sucesso'})
+        res.json({message: 'Pedido deletado com sucesso'});
     } catch (err) {
         if (err.message === 'Pedido não encontrado') {
             return res.status(404).json({ message: err.message });

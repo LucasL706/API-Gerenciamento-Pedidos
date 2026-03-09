@@ -1,25 +1,31 @@
 const { Order, Item } = require('../models');
 
 const createOrderService = async (data) => {
-    // Mapear JSON recebido para os campos do banco
-    const orderData = {
-        orderId: data.numeroPedido,
-        value: data.valorTotal,
-        creationDate: new Date(data.dataCriacao)
-    };
+    try{
+        // Mapear JSON recebido para os campos do banco
+        const orderData = {
+            orderId: data.numeroPedido,
+            value: data.valorTotal,
+            creationDate: new Date(data.dataCriacao)
+        };
 
-    const itemsData = data.items.map(i => ({
-        orderId: data.numeroPedido,
-        productId: parseInt(i.idItem),
-        quantity: i.quantidadeItem,
-        price: i.valorItem
-    }));
+        const itemsData = data.items.map(i => ({
+            orderId: data.numeroPedido,
+            productId: parseInt(i.idItem),
+            quantity: i.quantidadeItem,
+            price: i.valorItem
+        }));
 
-    // Salvar no banco
-    const order = await Order.create(orderData);
-    await Item.bulkCreate(itemsData);
+        // Salvar no banco
+        const order = await Order.create(orderData);
+        await Item.bulkCreate(itemsData);
 
-    return order;
+        return order;
+    } catch (err) {
+        const error = new Error('Falha ao criar pedido');
+        error.status = 500;
+        throw error;
+    }
 };
 
 const getOrderService = async (orderId) => {
@@ -31,7 +37,11 @@ const getOrderService = async (orderId) => {
         }]
     });
 
-    if (!order) throw new Error('Pedido não encontrado');
+    if (!order) {
+        const error = new Error('Pedido não encontrado');
+        error.status = 404;
+        throw error;
+    }
 
     return order;
 };
@@ -44,14 +54,23 @@ const listOrdersService = async () => {
         }]
     });
 
-    if (!orders || orders.length === 0) throw new Error('Nenhum pedido encontrado');
+    if (!orders || orders.length === 0){
+        const error = new Error('Nenhum pedido encontrado');
+        error.status = 404;
+        throw error;
+    }
 
     return orders;
 };
 
 const updateOrderService = async (orderId, data) => {
     const order = await Order.findByPk(orderId);
-    if (!order) throw new Error('Pedido não encontrado');
+    
+    if (!order) {
+        const error = new Error('Pedido não encontrado');
+        error.status = 404;
+        throw error;
+    }
 
     await order.update({
         value: data.valorTotal,
@@ -76,7 +95,11 @@ const deleteOrderService = async (orderId) => {
     await Item.destroy({ where: { orderId } });
     const deleted = await Order.destroy({ where: { orderId } });
 
-    if (!deleted) throw new Error('Pedido não encontrado');
+    if (!deleted){
+        const error = new Error('Pedido não encontrado');
+        error.status = 404;
+        throw error;
+    }
 
     return;
 };
