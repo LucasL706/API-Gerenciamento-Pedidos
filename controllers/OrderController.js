@@ -60,7 +60,7 @@ const listOrders = async (req, res) => {
         });
 
         if (!orders || orders.length === 0) {
-            return res.status(404).json({ message: 'Pedidos não encontrados' });
+            return res.status(404).json({ message: 'Nenhum pedido encontrado' });
         }
 
         res.json(orders);
