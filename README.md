@@ -233,9 +233,10 @@ Tabela ```order```
 Tabela ```item```
 | Coluna         | Tipo     | Descrição                          |
 | -------------- | -------- | ---------------------------------- |
-| `orderId`      | VARCHAR  | Identificador único do pedido (PK) |
-| `value`        | FLOAT    | Valor total do pedido              |
-| `creationDate` | DATETIME | Data e hora de criação do pedido   |
+| `productID`    | INTEGER  | Identificador único do pedido (PK) |
+| `orderId`      | VARCHAR  | Chave estrangeira vinculando ao pedido (FK) |
+| `quantity`     | INTEGER  | Quantidade do item no pedido       |
+| `price`        | FLOAT    | Valor total do pedido              |
 
 ### Relacionamentos:
 
