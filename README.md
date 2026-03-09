@@ -219,6 +219,32 @@ Resposta:
 "message": "Pedido deletado com sucesso"
 ```
 
+## Estrutura do Banco de Dados
+
+A aplicação utiliza um banco de dados MySQL com duas tabelas principais: **order** e **item**
+
+Tabela ```order```
+| Coluna         | Tipo     | Descrição                          |
+| -------------- | -------- | ---------------------------------- |
+| `orderId`      | VARCHAR  | Identificador único do pedido (PK) |
+| `value`        | FLOAT    | Valor total do pedido              |
+| `creationDate` | DATETIME | Data e hora de criação do pedido   |
+
+Tabela ```item```
+| Coluna         | Tipo     | Descrição                          |
+| -------------- | -------- | ---------------------------------- |
+| `orderId`      | VARCHAR  | Identificador único do pedido (PK) |
+| `value`        | FLOAT    | Valor total do pedido              |
+| `creationDate` | DATETIME | Data e hora de criação do pedido   |
+
+### Relacionamentos:
+
+Um pedido (order) pode ter vários itens (item) (1:N).
+
+A coluna orderId na tabela item referencia a coluna orderId na tabela order.
+
+O Sequelize cria automaticamente a relação order.hasMany(item) e item.belongsTo(order).
+
 ## Estrutura do Projeto
 
 ```
